@@ -8,7 +8,7 @@ Q1 <- as.matrix(c(14, -7, 0))
 Q2 <- as.matrix(c(36, -18, 0))
 
 ## get all the necessary .txt files from the current directory
-setwd(paste(pfad, "\\Data", sep=""))
+setwd(path_data)
 all.behav.files <- list.files(all.files=T, pattern = "*_raw.*")
 
 ## start for loop to get all the data of the subjects and put them in one wide data frame
