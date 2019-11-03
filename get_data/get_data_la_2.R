@@ -1,3 +1,6 @@
+## source libraries etc.
+source('E:/GitHub/R/agk_library.R')
+
 ## prep some variables
 missing.check  <- 1 # if set to 1 then people with too many missings will be dropped 
 missing.people <- list()
@@ -6,6 +9,9 @@ missing.people <- list()
 
 Q1 <- as.matrix(c(14, -7, 0))
 Q2 <- as.matrix(c(36, -18, 0))
+
+## set pfad
+pfad = 'E:/Google Drive/09_Diplom/LA/daten_behav_test_finale_SP_Diplom'
 
 ## get all the necessary .txt files from the current directory
 setwd(paste(pfad, "\\Data", sep=""))

@@ -1,6 +1,7 @@
 ## VD-ANALYSEN LOSS AVERSION ==================================================
 
 # 02.11.2012
+# path update: 03.11.2019
 
 # fitting a Generalized Mixed Model to the LA data
 # DV: accept.reject
@@ -15,15 +16,18 @@ rm(list = ls())
 
 ## preparation
 # path
-user <- "genaucka"
-pfad            <- paste("C:\\Users\\", user, "\\Google Drive\\Diplom\\LA\\daten_behav_test_finale_SP_Diplom", sep="")
-pfad_data       <- paste("C:\\Users\\", user, "\\Google Drive\\Diplom\\LA\\daten_behav_test_finale_SP_Diplom\\Data", sep="")
-pfad_scripts    <- paste("C:\\Users\\genaucka\\Google Drive\\Library\\R\\LA\\Scripts")
-pfad_results    <- paste("C:\\Users\\", user, "\\Google Drive\\Diplom\\LA\\daten_behav_test_finale_SP_Diplom\\Results", sep="")
-pfad_library    <- paste("C:\\Users\\", user, "\\Google Drive\\Library\\R", sep="")
-pfad_ransim     <- paste(paste(pfad_results, "\\rand_sim",sep=""))
-pfad_R_cit      <- paste("C:\\Users\\", user, "\\Google Drive\\Diplom\\Manuskript\\Lit to be impl in Zotero")
-pfad_model_calc = paste0(pfad_scripts, '\\model_calculation')
+path_gd = 'E:/Google Drive'
+path = paste0(path_gd, '/09_Diplom/LA/daten_behav_test_finale_SP_Diplom')
+path_data = paste0(path,'/Data')
+path_scripts = 'E:/GitHub/LA'
+path_scripts_data = paste0(path_scripts,'/get_data')
+path_scripts_components = paste0(path_scripts,'/get_components') 
+path_scripts_components = paste0(path_scripts,'/model_calculation')
+path_results = paste0(path,'/Results')
+path_library = 'E:/GitHub/R'
+path_ransim = paste0(path_results, "/rand_sim")
+path_R_cit = paste0(path_gd, '/Diplom/Manuskript/Lit to be impl in Zotero')
+path_model_calc = paste0(path_scripts, '/model_calculation')
 
 # parameters
 run_ana          = 0 # run analysis? 
@@ -36,24 +40,24 @@ export_to_matlab = 0
 param_df         = 'crm'
 
 # load libraries and functions, options (can be modified)
-setwd(pfad_library)
+setwd(path_library)
 source ('agk_library.R')
-setwd(pfad_scripts)
+setwd(path_scripts_data)
 source ('LA_options.R')
 
 # get all the data in long format
-setwd(pfad_scripts)
+setwd(path_scripts_data)
 source("get_data_la_2.R")
 
 # only select uncertain gambles
 if (only.some == 1){
-  setwd(pfad_scripts)
+  setwd(path_scripts)
   source('only_uncertain_gambles.R')  
   # set the pwd needed
-  setwd(pfad_data)
+  setwd(path_data)
 }
 
-setwd(pfad_scripts)
+setwd(path_scripts_data)
 source("LA_add_demograpics.R")
 
 # my contrasts
@@ -73,7 +77,7 @@ data_pdt_AD = subset(data_pdt,group == "AD")
 
 ## get the crm/cfm
 if (param_df == 'crm') {
-  setwd(pfad_results)
+  setwd(path_results)
   load("modc51_noed_majrev.RData")
   crm <- agk.get.compl.coef(modc[[3]],"group")
   names(crm) <- c("Intercept","betagain","betaloss","group","subject")
@@ -81,7 +85,7 @@ if (param_df == 'crm') {
   crm$lambda <- crm$betaloss*(-1)/crm$betagain
   data.la <- merge(data.la, crm, by.x = "subject", by.y = "subject", all.x = TRUE)
 } else if (param_df == 'cfm'){
-  setwd(pfad_model_calc)
+  setwd(path_model_calc)
   source("MLE_la_mu.R")
   crm        = all_params
   crm$lambda = crm$beta_loss*(-1)/crm$beta_gain
@@ -105,7 +109,7 @@ if (param_df == 'crm') {
 }
 
 ## saving the data for export to matlab
-setwd(pfad_data)
+setwd(path_data)
 data.la.aggr           <- aggregate(data.la, by = list(data.la$subject),FUN="first")
 data.la.aggr           <- data.la.aggr[,-1]
 data.la.aggr$loglambda <- get.log(data.la.aggr$lambda)
@@ -123,12 +127,12 @@ data.la.aggr_AD$GBQ_illus[is.nan(data.la.aggr_AD$GBQ_illus)] = imput_fun(data.la
 
 data.la.aggr = rbind(data.la.aggr_HC,data.la.aggr_PG,data.la.aggr_AD)
 
-write.table(data.la.aggr,file = "la_ed.txt",sep = "\t",quote = F,row.names = F)
+#write.table(data.la.aggr,file = "la_ed.txt",sep = "\t",quote = F,row.names = F)
 
 # get the models
-setwd(pfad_scripts)
+setwd(path_model_calc)
 source('LA_comp_mod.R')
-setwd(pfad_scripts)
+setwd(path_model_calc)
 source('LA_comp_mod_cov.R')
 source('LA_comp_mod_covc.R')
 all_modc <- c(all_mod,all_modc,all_modcc)
@@ -140,8 +144,8 @@ data.la$Age <- scale(data.la$Age,center=T,scale=F)
 data.la$Bildungsjahre_ges <- scale(data.la$Bildungsjahre_ges,center=T,scale=F)
 
 if (export_to_matlab) {
-  pfad_model_exp <- paste0("C:\\Users\\", user, "\\Google Drive\\Library\\MATLAB\\LA\\SS_Analysis\\LA_model")
-  setwd(pfad_model_exp)
+  path_model_exp <- paste0("C:\\Users\\", user, "\\Google Drive\\Library\\MATLAB\\LA\\SS_Analysis\\LA_model")
+  setwd(path_model_exp)
   writeMat(x=crm,con = "la_model.mat")
   # for value-based baseline based analysis
   # feHC = fixef(modc[[3]])
@@ -381,7 +385,7 @@ if (run_ana) {
   
   # plotting the fixed effects with bootstrapped CI's
   # prep
-  cur_name <- paste(pfad_results,"boot_la_compl_mod_no_cov51_noed_majrev.RData",sep="\\")
+  cur_name <- paste(path_results,"boot_la_compl_mod_no_cov51_noed_majrev.RData",sep="\\")
   ne <- new.env()
   load(file=cur_name, env=ne)
   cur_boot <- eval(parse(text=ls(env=ne,pattern = "*boot*")),envir = ne)
@@ -405,7 +409,7 @@ if (run_ana) {
   # compare ratio/... and la model loss aversion estimates
   la_ratio_model  <- glmer(formula = accept.reject ~ (ed.abs + ratio) * group + ((ed.abs + ratio) | subject), data = data.la, family = "binomial", control = glmerControl(optimizer = "bobyqa"))
   crm_ratio      <- agk.get.compl.coef(la_ratio_model,"group")
-  setwd(pfad_results)
+  setwd(path_results)
   load("cur_mod.Rdata")
   crm <- agk.get.compl.coef(cur_mod,"group") # no covs
   crm$la_ratio <- crm_ratio$ratio
@@ -575,8 +579,8 @@ if (run_ana) {
   
   predict(rtlist[[1]],newdata = query_dat_int,interval="confidence")
   
-  ## correlations with severity
-  setwd(pfad_results)
+  ## correlations with severity ===============================================
+  setwd(path_results)
   load("modc51_noed_majrev.RData")
   cur_mod <- modc[[3]]
   crm <- agk.get.compl.coef(cur_mod,"group") # no covs
@@ -588,7 +592,7 @@ if (run_ana) {
   describeBy(crm$lambda,crm$group)
   
   #desired_vars <- c("GBQ_mean_rec","PGYBOCS_Summe","KFG_Summe","GSAS_Summe")
-  desired_vars <- c("GBQ_mean_rec","PGYBOCS_Summe","KFG_Summe","GSAS_Summe","GBQ_persi","GBQ_illus")
+  desired_vars <- c("GBQ_mean_rec","PGYBOCS_Summe","KFG_Summe","GSAS_Summe","GBQ_persi","GBQ_illus","ADS","OCDS_Summe")
   #desired_vars <- c("ADS","OCDS_Summe")
   
   #des_vars_df = data.la.aggr
@@ -627,7 +631,7 @@ if (run_ana) {
     #cur_data <- agk.scale.ifpossible(subset(crm,group == (levels(data.la$group))[ii]))
     #cur_des  <- agk.scale.ifpossible(subset(des_vars_df,group == (levels(data.la$group))[ii]))
     cur_des  <- subset(des_vars_df,group == (levels(data.la$group))[ii])
-    tmp_2 <- get_log(cur_data$lambda)
+    tmp_2 <- get.log(cur_data$lambda)
     cur_data$lambda <- tmp_2
     tmp <-  corr.test(cur_data[c("lambda")],cur_des[desired_vars],method = "spearman",adjust = "none")
     cur_cor_info[[ii]] <- tmp
@@ -674,7 +678,7 @@ if (run_ana) {
   #multiplot(plotlist = all_plots,cols = 3)
   
   # plot the PG gPPI GBQ_persi relationship
-  setwd(pfad_results)
+  setwd(path_results)
   tmp = read.table(file="GBQ_persi_gPPI_PG.csv",sep=";",header=T,dec=",")
   tmp$gPPI <- as.numeric(tmp$gPPI)
   tmp$GBQpersi <- as.numeric(tmp$GBQpersi)
@@ -683,16 +687,82 @@ if (run_ana) {
   p
   
   ## cor GBQ whole data set
-  crm$lambda = get_log(crm$lambda)
+  crm$lambda = get.log(crm$lambda)
   cor.test(crm$lambda,des_vars_df$GBQ_persi)
   
-  ## heatmap; standardize!, per group per subject; 2 step approach
+  ## CORRELATION LIKE IN PAPER (ONE-SIDED, THE LOWER LA THE HIGHER SEVERITY)
+  library(boot)  
+  
+  myrho <- function(cur_d, indices){
+    # boot sample
+    cur_d = cur_d[indices,]
+    x = cur_d$x
+    y = cur_d$y
+    # corr function
+    rho <- cor.test(x, y,  method = 'pearson')
+    cur_est = rho$estimate
+    if (is.na(cur_est)) {
+      # NA will be 0 (conservative)
+      cur_est = 0
+    }
+    return(cur_est)
+  }
+  
+  agk.corr.severity.la.single.p = function(x,y,R=10000) {
+    if (any(is.na(y))) {
+      return(NaN)
+    }
+    # bootstrap the p-value for r, one-sided, data is x,y
+    
+    boot.rho <- boot(data.frame(x,y), statistic = myrho, R=R)
+    
+    cur_t = boot.rho$t
+    
+    rhodens   = density(cur_t,bw = c("ucv"))
+    rhodens$y = cumsum(rhodens$y/sum(rhodens$y))
+    f <- approxfun(rhodens, rule=2)
+    return(1-f(0))
+  }
+  
+  # use the bootstrap function in all groups for all desired vars
+  cor_boot = list()
+  cur_levels   <- levels(data.la$group)
+  ct = 0
+  for (ii in 1:length(cur_levels)) {
+    cur_data <- subset(crm,group == (levels(data.la$group))[ii])
+    cur_des  <- subset(des_vars_df,group == (levels(data.la$group))[ii])
+    tmp_2 <- get.log(cur_data$lambda)
+    cur_data$lambda <- tmp_2
+    for (dv in desired_vars) {
+      # get the bootstr corr
+      cur_p = agk.corr.severity.la.single.p(cur_data$lambda,cur_des[[dv]],R=1000)
+      res = c((levels(data.la$group))[ii],dv,cur_p)
+      print(res)
+      ct = ct + 1
+      cor_boot[[ct]] = res
+    }
+  }
+  
+  # reduce results to excluded the NAN
+  cur_fun = function(x) {return(x[3])}
+  all_ps = as.numeric(lapply(cor_boot,cur_fun))
+  cor_boot = cor_boot[all_ps != 'NaN']
+  
+  # get the fdr p-value:
+  all_ps = as.numeric(lapply(cor_boot,cur_fun))
+  all_ps_fdr = p.adjust(all_ps,'bonferroni')
+  
+  # what corr won?
+  print(cor_boot[all_ps_fdr < 0.05])
+  
+  ## heatmap; standardize! ####################################################
+  # per group per subject; 2 step approach
   # get the unaggr data
   data.la.bcp = data.la
   rm(data.la)
   des_agg     = 1
   # get all the data in long format
-  setwd(pfad_scripts)
+  setwd(path_scripts)
   source("get_data_la_2.R")
   data.la_unagg = data.la
   data.la       = data.la.bcp

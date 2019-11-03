@@ -5,7 +5,7 @@
 agk.load.ifnot.install("pracma")
 
 ## read in spss file with demographics and survey data
-setwd(paste(pfad, "\\Data", sep = ""))
+setwd(paste(path, "/Data", sep = ""))
 # only the included subjects
 demographics <- read.spss("BGG_4Alex_original.sav", use.value.labels = TRUE, to.data.frame = TRUE,
                           max.value.labels = Inf, trim.factor.names = FALSE,
@@ -70,13 +70,13 @@ demographics$BIS_own_sum_BIS11 = demographics$BIS_own_mean_BIS11 * 30 # some mis
 
 
 ## now get the components
-setwd(pfad_scripts)
-source("LA_get_components_2.R")
-demographics <- merge(demographics, demogr.compl.nl[c("VP_Code","loc","noa")],by.x="VP_Code", by.y="VP_Code", all.x =T)
+#setwd(path_scripts_components)
+#source("LA_get_components_2.R")
+#demographics <- merge(demographics, demogr.compl.nl[c("VP_Code","loc","noa")],by.x="VP_Code", by.y="VP_Code", all.x =T)
 
 ## get the merged Einkommen per subject
 # best guess from two variables combined: household and personal income)
-setwd(pfad_data)
+setwd(path_data)
 VP_Einkommen_merged <- read.table("Einkommen_VP_merge.csv", sep = ";", header= T) ## CHANGE THIS TABLE!
 demographics <- merge(demographics, VP_Einkommen_merged, by.x="VP_Code", by.y="Subject", all.y =T)
 

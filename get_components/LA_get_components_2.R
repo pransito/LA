@@ -7,8 +7,8 @@ dist_fun = "none"
 comp_exp = "Nina"
 
 # get the file with component rules
-setwd(pfad_scripts)
-locnoaalexnina <- read.table(file="loc_noa_components_Nina_Alex_Nina.txt",header = T,sep="\t")
+#setwd(pfad_scripts)
+#locnoaalexnina <- read.table(file="loc_noa_components_Nina_Alex_Nina.txt",header = T,sep="\t")
 
 # function to select the component for loc and noa
 # if the (first) component is picked for both then go to next component in both cases
@@ -53,22 +53,22 @@ all_names_AD  <- c(names_GBQ,names_BIS,names_BIS_BAS,names_debt,names_smoking,na
 which_to_drop <- which(all_names_HC=="GBQ_20")
 all_names_AD  <- all_names_AD[-which_to_drop]
 
-# Alex or Ninas collection?
-if (comp_exp == "Nina") {
-  loc_PG <- locnoaalexnina$loc_nina[locnoaalexnina$item %in% all_names_PG]
-  noa_PG <- locnoaalexnina$noa_nina[locnoaalexnina$item %in% all_names_PG]
-  loc_AD <- locnoaalexnina$loc_nina[locnoaalexnina$item %in% all_names_AD]
-  noa_AD <- locnoaalexnina$noa_nina[locnoaalexnina$item %in% all_names_AD]
-  loc_HC <- locnoaalexnina$loc_nina[locnoaalexnina$item %in% all_names_HC]
-  noa_HC <- locnoaalexnina$noa_nina[locnoaalexnina$item %in% all_names_HC]  
-} else if (comp_exp == "Alex") {
-  loc_PG <- locnoaalexnina$loc_alex[locnoaalexnina$item %in% all_names_PG]
-  noa_PG <- locnoaalexnina$noa_alex[locnoaalexnina$item %in% all_names_PG]
-  loc_AD <- locnoaalexnina$loc_alex[locnoaalexnina$item %in% all_names_AD]
-  noa_AD <- locnoaalexnina$noa_alex[locnoaalexnina$item %in% all_names_AD]
-  loc_HC <- locnoaalexnina$loc_alex[locnoaalexnina$item %in% all_names_HC]
-  noa_HC <- locnoaalexnina$noa_alex[locnoaalexnina$item %in% all_names_HC]
-}
+# # Alex or Ninas collection?
+# if (comp_exp == "Nina") {
+#   loc_PG <- locnoaalexnina$loc_nina[locnoaalexnina$item %in% all_names_PG]
+#   noa_PG <- locnoaalexnina$noa_nina[locnoaalexnina$item %in% all_names_PG]
+#   loc_AD <- locnoaalexnina$loc_nina[locnoaalexnina$item %in% all_names_AD]
+#   noa_AD <- locnoaalexnina$noa_nina[locnoaalexnina$item %in% all_names_AD]
+#   loc_HC <- locnoaalexnina$loc_nina[locnoaalexnina$item %in% all_names_HC]
+#   noa_HC <- locnoaalexnina$noa_nina[locnoaalexnina$item %in% all_names_HC]  
+# } else if (comp_exp == "Alex") {
+#   loc_PG <- locnoaalexnina$loc_alex[locnoaalexnina$item %in% all_names_PG]
+#   noa_PG <- locnoaalexnina$noa_alex[locnoaalexnina$item %in% all_names_PG]
+#   loc_AD <- locnoaalexnina$loc_alex[locnoaalexnina$item %in% all_names_AD]
+#   noa_AD <- locnoaalexnina$noa_alex[locnoaalexnina$item %in% all_names_AD]
+#   loc_HC <- locnoaalexnina$loc_alex[locnoaalexnina$item %in% all_names_HC]
+#   noa_HC <- locnoaalexnina$noa_alex[locnoaalexnina$item %in% all_names_HC]
+# }
 
 # # names BDI HC adjustment
 # names_BDI_HC = names_BDI[-which(names_BDI == "BDI2_14")]
